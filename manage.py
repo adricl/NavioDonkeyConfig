@@ -12,6 +12,7 @@ Options:
     --chaos          Add periodic random steering when manually driving
 """
 import os
+import time
 
 from docopt import docopt
 import donkeycar as dk
@@ -156,13 +157,15 @@ def train(cfg, tub_names, new_model_path, base_model_path=None):
     print('train: %d, validation: %d' % (total_train, total_val))
     steps_per_epoch = total_train // cfg.BATCH_SIZE
     print('steps_per_epoch', steps_per_epoch)
+    start = time.time()
 
     kl.train(train_gen,
              val_gen,
              saved_model_path=new_model_path,
              steps=steps_per_epoch,
              train_split=cfg.TRAIN_TEST_SPLIT)
-
+    end = time.time()
+    print('Time take', end - start)
 
 if __name__ == '__main__':
     args = docopt(__doc__)
